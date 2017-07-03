@@ -24,7 +24,10 @@ extern "C" {
 #define REG_LED3               0x03
 #define REG_PSU                0x04
 #define REG_PSUVOLTAGE         0x05
-#define COMMREGS_SIZE          0x06
+#define REG_PSU_CUTOFF_LOW     0x06
+#define REG_PSU_CUTOFF_HIGH    0x07
+#define REG_PSU_CUTOFF_HYST    0x08
+#define COMMREGS_SIZE          0x09
 
 #define LED_OFF                0x0000 
 #define LED_BLIP               0x0001

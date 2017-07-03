@@ -65,9 +65,9 @@ void main()
   
     while(1)
     {
-        if(led_ctr > 10) //no activity in a while, turn the COMMs LED off
+        if(led_ctr > 100) //no activity in a while, turn the COMMs LED off
         {
-          led_ctr = 10;
+          led_ctr = 100;
           LED1_PIN    = HIGH; // turn the LED off  
         }
         if(get_usb_packet(&q)) // Handle incoming USB packet

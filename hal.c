@@ -128,6 +128,11 @@ void hardware_init(void)
     FVRCON = 0x83; //4.096V to ADC
 
 	usb_init(); //USB stack function
+    
+    //User Initialization
+    commregs[REG_PSU_CUTOFF_LOW] = 523;
+    commregs[REG_PSU_CUTOFF_HIGH] = 630;
+    commregs[REG_PSU_CUTOFF_HYST] = 5;
 }
 
 //******************************************************************************
@@ -261,8 +266,9 @@ void service_psu(void)
         EXT_PSU_TRIS = OUTPUT; 
         EXT_PSU_PIN  = HIGH;
         for(i=0;i<1200;i++); //make sure it stays on long enough to mask the measurement as an intentional blink
-    }
-    if(current_psu_state == HIGH && (result > 650 || result < 520)) 
+    }  
+
+    if(current_psu_state == HIGH && (result > commregs[REG_PSU_CUTOFF_HIGH] || result < commregs[REG_PSU_CUTOFF_LOW])) 
     {
         static uint8_t accident_forgiveness = true;
         if(accident_forgiveness == true)
@@ -276,7 +282,7 @@ void service_psu(void)
         }
     }
     //else if (current_psu_state == LOW && (result < 540 && result > 445)) //deadband built in for PSU detection
-    else if (current_psu_state == LOW && (result < 645 && result > 525))
+    else if (current_psu_state == LOW && (result < (commregs[REG_PSU_CUTOFF_HIGH] - commregs[REG_PSU_CUTOFF_HYST])  && result > (commregs[REG_PSU_CUTOFF_LOW] + commregs[REG_PSU_CUTOFF_HYST])))
     {
         EXT_PSU_PIN  = HIGH; //PSU Detected
     }
